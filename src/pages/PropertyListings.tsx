@@ -290,8 +290,7 @@ const PropertyListings: React.FC = () => {
 
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-1 text-2xl font-bold text-green-600">
-                      <DollarSign className="w-6 h-6" />
+                    <div className="text-2xl font-bold text-green-600">
                       <span>
                         {property.price !== null && property.price !== undefined 
                           ? formatPrice(property.price)

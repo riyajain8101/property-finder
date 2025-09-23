@@ -36,6 +36,14 @@ export interface Agent {
   rating: number;
   location: string;
   profile_image?: string;
+  title?: string;
+  company?: string;
+  years_experience?: number;
+  languages?: string[];
+  awards?: string[];
+  website?: string;
+  availability?: string;
+  contact_preference?: string;
 }
 
 // Neighborhood types

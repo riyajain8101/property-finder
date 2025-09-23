@@ -71,8 +71,8 @@ router.post('/profiles', async (req, res, next) => {
         title: agent.title,
         company: agent.company,
         years_experience: agent.years_experience,
-        languages: agent.languages,
-        awards: agent.awards,
+        languages: Array.isArray(agent.languages) ? agent.languages : [],
+        awards: Array.isArray(agent.awards) ? agent.awards : [],
         website: agent.website,
         availability: agent.availability,
         contact_preference: agent.contact_preference

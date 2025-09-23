@@ -37,28 +37,36 @@ router.post('/generate-listings', async (req, res, next) => {
 
     const result = await makeSmythosRequest('/api/generate_listings', 'POST', requestData);
 
-    // 🔑 Extract listings safely
+    // 🔑 Extract listings with flexible structure handling
     let listings = [];
     
-    if (result?.data?.rawText) {
-      // Handle raw text response - SmythOS returned non-JSON
-      console.log('SmythOS returned raw text:', result.data.rawText);
-      // Try to extract JSON from the raw text if it contains JSON
-      try {
-        const jsonMatch = result.data.rawText.match(/\{.*\}/s);
-        if (jsonMatch) {
-          const parsed = JSON.parse(jsonMatch[0]);
-          listings = parsed?.Output?.listings || [];
+    if (result?.data) {
+      if (result.data.rawText) {
+        // Handle raw text response - SmythOS returned non-JSON
+        console.log('SmythOS returned raw text:', result.data.rawText);
+        try {
+          const jsonMatch = result.data.rawText.match(/\{.*\}/s);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            listings = extractListings(parsed);
+          }
+        } catch (e) {
+          console.log('Could not extract JSON from raw text');
         }
-      } catch (e) {
-        console.log('Could not extract JSON from raw text');
+      } else {
+        // Handle parsed JSON response
+        listings = extractListings(result.data);
       }
-    } else if (result?.data?.Output?.listings) {
-      // Handle direct JSON response structure
-      listings = result.data.Output.listings;
-    } else if (result?.data?.result?.Output?.listings) {
-      // Handle nested result structure
-      listings = result.data.result.Output.listings;
+    }
+
+    // Helper function to extract listings from various JSON structures
+    function extractListings(data) {
+      // Try multiple possible paths for listings
+      return data?.Output?.listings ||
+             data?.result?.Output?.listings ||
+             data?.listings ||
+             data?.Output ||
+             (Array.isArray(data) ? data : []);
     }
 
     // Debug logs
@@ -96,28 +104,36 @@ router.post('/details', async (req, res, next) => {
 
     const result = await makeSmythosRequest('/api/property_detail', 'POST', requestData);
 
-    // 🔑 Extract details safely
+    // 🔑 Extract details with flexible structure handling
     let details = {};
     
-    if (result?.data?.rawText) {
-      // Handle raw text response - SmythOS returned non-JSON
-      console.log('SmythOS returned raw text:', result.data.rawText);
-      // Try to extract JSON from the raw text if it contains JSON
-      try {
-        const jsonMatch = result.data.rawText.match(/\{.*\}/s);
-        if (jsonMatch) {
-          const parsed = JSON.parse(jsonMatch[0]);
-          details = parsed?.Output || {};
+    if (result?.data) {
+      if (result.data.rawText) {
+        // Handle raw text response - SmythOS returned non-JSON
+        console.log('SmythOS returned raw text:', result.data.rawText);
+        try {
+          const jsonMatch = result.data.rawText.match(/\{.*\}/s);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            details = extractDetails(parsed);
+          }
+        } catch (e) {
+          console.log('Could not extract JSON from raw text');
         }
-      } catch (e) {
-        console.log('Could not extract JSON from raw text');
+      } else {
+        // Handle parsed JSON response
+        details = extractDetails(result.data);
       }
-    } else if (result?.data?.Output) {
-      // Handle direct JSON response structure
-      details = result.data.Output;
-    } else if (result?.data?.result?.Output) {
-      // Handle nested result structure
-      details = result.data.result.Output;
+    }
+
+    // Helper function to extract details from various JSON structures
+    function extractDetails(data) {
+      // Try multiple possible paths for property details
+      return data?.Output ||
+             data?.result?.Output ||
+             data?.property_details ||
+             data?.details ||
+             data || {};
     }
 
     // Debug logs

@@ -23,28 +23,37 @@ router.get('/data', async (req, res, next) => {
 
     const result = await makeSmythosRequest('/api/neighborhood_data', 'GET', null, params);
 
-    // 🔑 Extract neighborhood info safely
+    // 🔑 Extract neighborhood info with flexible structure handling
     let neighborhoodInfo = {};
     
-    if (result?.data?.rawText) {
-      // Handle raw text response - SmythOS returned non-JSON
-      console.log('SmythOS returned raw text:', result.data.rawText);
-      // Try to extract JSON from the raw text if it contains JSON
-      try {
-        const jsonMatch = result.data.rawText.match(/\{.*\}/s);
-        if (jsonMatch) {
-          const parsed = JSON.parse(jsonMatch[0]);
-          neighborhoodInfo = parsed?.Output?.neighborhood_info || {};
+    if (result?.data) {
+      if (result.data.rawText) {
+        // Handle raw text response - SmythOS returned non-JSON
+        console.log('SmythOS returned raw text:', result.data.rawText);
+        try {
+          const jsonMatch = result.data.rawText.match(/\{.*\}/s);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            neighborhoodInfo = extractNeighborhoodInfo(parsed);
+          }
+        } catch (e) {
+          console.log('Could not extract JSON from raw text');
         }
-      } catch (e) {
-        console.log('Could not extract JSON from raw text');
+      } else {
+        // Handle parsed JSON response
+        neighborhoodInfo = extractNeighborhoodInfo(result.data);
       }
-    } else if (result?.data?.Output?.neighborhood_info) {
-      // Handle direct JSON response structure
-      neighborhoodInfo = result.data.Output.neighborhood_info;
-    } else if (result?.data?.result?.Output?.neighborhood_info) {
-      // Handle nested result structure
-      neighborhoodInfo = result.data.result.Output.neighborhood_info;
+    }
+
+    // Helper function to extract neighborhood info from various JSON structures
+    function extractNeighborhoodInfo(data) {
+      // Try multiple possible paths for neighborhood info
+      return data?.Output?.neighborhood_info ||
+             data?.result?.Output?.neighborhood_info ||
+             data?.neighborhood_info ||
+             data?.neighborhood ||
+             data?.Output ||
+             data || {};
     }
 
     // Debug logs

@@ -24,28 +24,37 @@ router.post('/profiles', async (req, res, next) => {
 
     const result = await makeSmythosRequest('/api/agent_profiles', 'POST', requestData);
 
-    // 🔑 Extract agent profiles safely
+    // 🔑 Extract agent profiles with flexible structure handling
     let agents = [];
     
-    if (result?.data?.rawText) {
-      // Handle raw text response - SmythOS returned non-JSON
-      console.log('SmythOS returned raw text:', result.data.rawText);
-      // Try to extract JSON from the raw text if it contains JSON
-      try {
-        const jsonMatch = result.data.rawText.match(/\{.*\}/s);
-        if (jsonMatch) {
-          const parsed = JSON.parse(jsonMatch[0]);
-          agents = parsed?.Output?.agent_profiles || [];
+    if (result?.data) {
+      if (result.data.rawText) {
+        // Handle raw text response - SmythOS returned non-JSON
+        console.log('SmythOS returned raw text:', result.data.rawText);
+        try {
+          const jsonMatch = result.data.rawText.match(/\{.*\}/s);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            agents = extractAgents(parsed);
+          }
+        } catch (e) {
+          console.log('Could not extract JSON from raw text');
         }
-      } catch (e) {
-        console.log('Could not extract JSON from raw text');
+      } else {
+        // Handle parsed JSON response
+        agents = extractAgents(result.data);
       }
-    } else if (result?.data?.Output?.agent_profiles) {
-      // Handle direct JSON response structure
-      agents = result.data.Output.agent_profiles;
-    } else if (result?.data?.result?.Output?.agent_profiles) {
-      // Handle nested result structure
-      agents = result.data.result.Output.agent_profiles;
+    }
+
+    // Helper function to extract agents from various JSON structures
+    function extractAgents(data) {
+      // Try multiple possible paths for agent profiles
+      return data?.Output?.agent_profiles ||
+             data?.result?.Output?.agent_profiles ||
+             data?.agent_profiles ||
+             data?.agents ||
+             data?.Output ||
+             (Array.isArray(data) ? data : []);
     }
 
     // Debug logs

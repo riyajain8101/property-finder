@@ -1,3 +1,18 @@
+    const mockAds: Ad[] = [
+  {
+    id: '1',
+    title: 'Dream Apartment in Downtown',
+    subtitle: '2 bed · 2 bath · 1,200 sqft',
+    content: 'Live in the heart of the city with easy access to shops and transit. This modern apartment features updated appliances and stunning city views.',
+    imageUrl: 'https://via.placeholder.com/600x300/FF5733/FFFFFF?text=Downtown+Apartment',
+    imageAlt: 'Downtown Apartment',
+    cta: {
+      label: 'View Details',
+      url: '#downtown-apartment'
+    }
+  },
+  {
+    id: '2',
     title: 'Luxury Oceanfront Villa',
     subtitle: '4 bed · 3 bath · 2,800 sqft',
     content: 'Wake up to breathtaking ocean views every day. This stunning villa offers private beach access and world-class amenities.',
@@ -36,18 +51,3 @@
 export const getMockAds = (): Ad[] => {
   return mockAds;
 };
-    imageAlt: 'Downtown Apartment',
-    cta: {
-    imageUrl: 'https://via.placeholder.com/600x300/FF5733/FFFFFF?text=Downtown+Apartment',
-      label: 'View Details',
-    content: 'Live in the heart of the city with easy access to shops and transit. This modern apartment features updated appliances and stunning city views.',
-      url: '#downtown-apartment'
-    subtitle: '2 bed · 2 bath · 1,200 sqft',
-    }
-    title: 'Dream Apartment in Downtown',
-  },
-    id: '1',
-  {
-  {
-    id: '2',
-const mockAds: Ad[] = [

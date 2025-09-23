@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home, Users, MapPin, Megaphone, Search } from 'lucide-react';
+import Advertisement from './Advertisement';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -61,6 +62,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => 
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Advertisement />
         {children}
       </main>
 

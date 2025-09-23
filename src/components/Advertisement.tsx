@@ -6,6 +6,7 @@ import { Ad } from '../types/Ad';
 const Advertisement: React.FC = () => {
   const [ads, setAds] = useState<Ad[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isHidden, setIsHidden] = useState(false);
@@ -23,7 +24,22 @@ const Advertisement: React.FC = () => {
     };
 
     loadAds();
+  }, []);
+
+  useEffect(() => {
     let interval: NodeJS.Timeout;
+    if (ads.length > 1) {
+      interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % ads.length);
+      }, 10000); // Rotate every 10 seconds
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [ads.length]);
     if (ads.length > 0) {
       interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % ads.length);
@@ -69,6 +85,8 @@ const Advertisement: React.FC = () => {
   }
 
   const currentAd = ads[currentIndex];
+
+  if (!currentAd) {
 
   if (!currentAd) {
     return null;

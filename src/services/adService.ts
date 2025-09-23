@@ -1,56 +1,53 @@
-import { Ad } from '../types/Ad';
-
-const mockAds: Ad[] = [
-  {
-    id: 'mock-ad-1',
-    title: 'Modern City Apartment',
-    subtitle: 'Prime Location, Stunning Views',
-    content: 'Discover this spacious 2-bedroom, 2-bathroom apartment in the heart of the city. Featuring a modern kitchen, balcony, and access to premium amenities.',
-    imageUrl: 'https://via.placeholder.com/400x200/FF5733/FFFFFF?text=Modern+Apartment',
-    imageAlt: 'Modern City Apartment',
-    cta: {
-      label: 'View Details',
-      url: '#apartment-details-1',
-    },
-  },
-  {
-    id: 'mock-ad-2',
     title: 'Luxury Oceanfront Villa',
-    subtitle: 'Your Dream Coastal Retreat',
-    content: 'Experience unparalleled luxury in this magnificent 5-bedroom villa with breathtaking ocean views, a private infinity pool, and direct beach access.',
-    imageUrl: 'https://via.placeholder.com/400x200/33FF57/FFFFFF?text=Luxury+Villa',
-    imageAlt: 'Luxury Oceanfront Villa',
+    subtitle: '4 bed · 3 bath · 2,800 sqft',
+    content: 'Wake up to breathtaking ocean views every day. This stunning villa offers private beach access and world-class amenities.',
+    imageUrl: 'https://via.placeholder.com/600x300/33FF57/FFFFFF?text=Oceanfront+Villa',
+    imageAlt: 'Oceanfront Villa',
     cta: {
-      label: 'Explore Now',
-      url: '#villa-details-2',
-    },
+      label: 'Schedule Tour',
+      url: '#oceanfront-villa'
+    }
   },
   {
-    id: 'mock-ad-3',
-    title: 'Cozy Family Townhouse',
-    subtitle: 'Perfect for Growing Families',
-    content: 'A charming 3-bedroom townhouse in a family-friendly neighborhood. Enjoy a private garden, community park, and excellent school districts.',
-    imageUrl: 'https://via.placeholder.com/400x200/3357FF/FFFFFF?text=Cozy+Townhouse',
-    imageAlt: 'Cozy Family Townhouse',
+    id: '3',
+    title: 'Cozy Family Home',
+    subtitle: '3 bed · 2 bath · 1,800 sqft',
+    content: 'Perfect for growing families! This charming home features a large backyard, updated kitchen, and is located in top-rated school district.',
+    imageUrl: 'https://via.placeholder.com/600x300/3357FF/FFFFFF?text=Family+Home',
+    imageAlt: 'Family Home',
     cta: {
       label: 'Learn More',
-      url: '#townhouse-details-3',
-    },
+      url: '#family-home'
+    }
   },
   {
-    id: 'mock-ad-4',
-    title: 'Investment Opportunity',
-    subtitle: 'High-Yield Commercial Property',
-    content: 'Secure your future with this prime commercial real estate. High foot traffic, excellent rental income potential, and strategic location.',
-    imageUrl: 'https://via.placeholder.com/400x200/FFC300/000000?text=Commercial+Property',
-    imageAlt: 'Commercial Property Investment',
+    id: '4',
+    title: 'Modern Condo Complex',
+    subtitle: '1 bed · 1 bath · 850 sqft',
+    content: 'Contemporary living at its finest. Enjoy resort-style amenities including pool, fitness center, and rooftop terrace with panoramic views.',
+    imageUrl: 'https://via.placeholder.com/600x300/FF33F5/FFFFFF?text=Modern+Condo',
+    imageAlt: 'Modern Condo',
     cta: {
-      label: 'Invest Now',
-      url: '#investment-details-4',
-    },
-  },
+      label: 'Explore Now',
+      url: '#modern-condo'
+    }
+  }
 ];
-
 export const getMockAds = (): Ad[] => {
   return mockAds;
 };
+    imageAlt: 'Downtown Apartment',
+    cta: {
+    imageUrl: 'https://via.placeholder.com/600x300/FF5733/FFFFFF?text=Downtown+Apartment',
+      label: 'View Details',
+    content: 'Live in the heart of the city with easy access to shops and transit. This modern apartment features updated appliances and stunning city views.',
+      url: '#downtown-apartment'
+    subtitle: '2 bed · 2 bath · 1,200 sqft',
+    }
+    title: 'Dream Apartment in Downtown',
+  },
+    id: '1',
+  {
+  {
+    id: '2',
+const mockAds: Ad[] = [

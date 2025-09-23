@@ -1,65 +1,56 @@
 import { Ad } from '../types/Ad';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+const mockAds: Ad[] = [
+  {
+    id: 'mock-ad-1',
+    title: 'Modern City Apartment',
+    subtitle: 'Prime Location, Stunning Views',
+    content: 'Discover this spacious 2-bedroom, 2-bathroom apartment in the heart of the city. Featuring a modern kitchen, balcony, and access to premium amenities.',
+    imageUrl: 'https://via.placeholder.com/400x200/FF5733/FFFFFF?text=Modern+Apartment',
+    imageAlt: 'Modern City Apartment',
+    cta: {
+      label: 'View Details',
+      url: '#apartment-details-1',
+    },
+  },
+  {
+    id: 'mock-ad-2',
+    title: 'Luxury Oceanfront Villa',
+    subtitle: 'Your Dream Coastal Retreat',
+    content: 'Experience unparalleled luxury in this magnificent 5-bedroom villa with breathtaking ocean views, a private infinity pool, and direct beach access.',
+    imageUrl: 'https://via.placeholder.com/400x200/33FF57/FFFFFF?text=Luxury+Villa',
+    imageAlt: 'Luxury Oceanfront Villa',
+    cta: {
+      label: 'Explore Now',
+      url: '#villa-details-2',
+    },
+  },
+  {
+    id: 'mock-ad-3',
+    title: 'Cozy Family Townhouse',
+    subtitle: 'Perfect for Growing Families',
+    content: 'A charming 3-bedroom townhouse in a family-friendly neighborhood. Enjoy a private garden, community park, and excellent school districts.',
+    imageUrl: 'https://via.placeholder.com/400x200/3357FF/FFFFFF?text=Cozy+Townhouse',
+    imageAlt: 'Cozy Family Townhouse',
+    cta: {
+      label: 'Learn More',
+      url: '#townhouse-details-3',
+    },
+  },
+  {
+    id: 'mock-ad-4',
+    title: 'Investment Opportunity',
+    subtitle: 'High-Yield Commercial Property',
+    content: 'Secure your future with this prime commercial real estate. High foot traffic, excellent rental income potential, and strategic location.',
+    imageUrl: 'https://via.placeholder.com/400x200/FFC300/000000?text=Commercial+Property',
+    imageAlt: 'Commercial Property Investment',
+    cta: {
+      label: 'Invest Now',
+      url: '#investment-details-4',
+    },
+  },
+];
 
-interface FetchAdParams {
-  location?: string;
-  count?: number;
-}
-
-export const fetchAd = async (params: FetchAdParams = {}): Promise<Ad | null> => {
-  try {
-    const requestData = {
-      location: params.location || 'USA',
-      property_type: 'house',
-      price_range: '$300K - $800K',
-      ad_type: 'general',
-      count: (params.count || 1).toString()
-    };
-
-    const response = await fetch(`${API_BASE_URL}/ads/generate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    
-    // Extract the first ad from the response
-    const ads = result.data || [];
-    if (!Array.isArray(ads) || ads.length === 0) {
-      return null;
-    }
-
-    const rawAd = ads[0];
-    
-    // Normalize the ad data to match our Ad interface
-    const normalizedAd: Ad = {
-      id: rawAd.id || `ad-${Date.now()}`,
-      title: rawAd.title || rawAd.subtitle || 'Featured Property',
-      subtitle: rawAd.subtitle || rawAd.company_name || 'Real Estate Opportunity',
-      content: rawAd.description || rawAd.content || 'Discover your dream property today.',
-      imageUrl: rawAd.image_url || 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800',
-      imageAlt: rawAd.title || 'Real Estate Property',
-      cta: rawAd.cta_url && rawAd.cta_text ? {
-        label: rawAd.cta_text,
-        url: rawAd.cta_url
-      } : {
-        label: 'Learn More',
-        url: '#'
-      }
-    };
-
-    return normalizedAd;
-
-  } catch (error) {
-    console.error('Error fetching ad:', error);
-    throw new Error('Failed to fetch advertisement');
-  }
+export const getMockAds = (): Ad[] => {
+  return mockAds;
 };

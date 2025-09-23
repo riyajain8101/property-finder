@@ -40,6 +40,9 @@ const Advertisement: React.FC = () => {
       }
     };
   }, [ads.length]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
     if (ads.length > 0) {
       interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % ads.length);
@@ -87,6 +90,8 @@ const Advertisement: React.FC = () => {
   const currentAd = ads[currentIndex];
 
   if (!currentAd) {
+    return null;
+  }
 
   if (!currentAd) {
     return null;

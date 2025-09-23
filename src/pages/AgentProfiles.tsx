@@ -147,11 +147,30 @@ const AgentProfiles: React.FC = () => {
                 <div className="p-6">
                   {/* Agent Header */}
                   <div className="flex items-center space-x-4 mb-4">
-                    <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                    {agent.profile_image ? (
+                      <img
+                        src={agent.profile_image}
+                        alt={agent.name || 'Agent'}
+                        className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div 
+                      className="w-16 h-16 bg-gradient-to-r from-blue-600 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-xl"
+                      style={{ display: agent.profile_image ? 'none' : 'flex' }}
+                    >
                       {agent.name?.split(' ').map(n => n[0]).join('').slice(0, 2)}
                     </div>
                     <div className="flex-1">
                       <h4 className="text-lg font-bold text-gray-900">{agent.name || '-'}</h4>
+                      {agent.title && agent.company && (
+                        <p className="text-sm text-gray-600 mb-1">{agent.title} at {agent.company}</p>
+                      )}
                       <div className="flex items-center space-x-1 mb-1">
                         {renderStars(agent.rating)}
                         <span className="text-sm text-gray-600 ml-2">
@@ -169,12 +188,31 @@ const AgentProfiles: React.FC = () => {
                   <div className="mb-4">
                     <div className="flex items-center space-x-2 mb-2">
                       <Award className="w-4 h-4 text-orange-500" />
-                      <span className="text-sm font-medium text-gray-700">Experience</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        {agent.years_experience ? `${agent.years_experience} Years Experience` : 'Experience'}
+                      </span>
                     </div>
                     <p className="text-sm text-gray-600 bg-orange-50 p-3 rounded-lg">
                       {agent.experience || '-'}
                     </p>
                   </div>
+
+                  {/* Languages */}
+                  {agent.languages && agent.languages.length > 0 && (
+                    <div className="mb-4">
+                      <div className="text-sm font-medium text-gray-700 mb-2">Languages</div>
+                      <div className="flex flex-wrap gap-2">
+                        {agent.languages.map((language, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-medium"
+                          >
+                            {language}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Specialties */}
                   {agent.specialties && agent.specialties.length > 0 && (
@@ -200,13 +238,35 @@ const AgentProfiles: React.FC = () => {
 
                   {/* Recent Sales */}
                   <div className="mb-6">
-                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg text-center">
-                      <div className="text-2xl font-bold text-green-600">
-                        {agent.recent_sales ?? '-'}
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg">
+                      <div className="text-center mb-2">
+                        <div className="text-2xl font-bold text-green-600">
+                          {agent.recent_sales ?? '-'}
+                        </div>
+                        <div className="text-sm text-gray-700">Recent Sales</div>
                       </div>
-                      <div className="text-sm text-gray-700">Recent Sales</div>
+                      {agent.availability && (
+                        <div className="text-xs text-gray-600 text-center mt-2 border-t border-green-200 pt-2">
+                          📞 {agent.availability}
+                        </div>
+                      )}
                     </div>
                   </div>
+
+                  {/* Awards */}
+                  {agent.awards && agent.awards.length > 0 && (
+                    <div className="mb-4">
+                      <div className="text-sm font-medium text-gray-700 mb-2">Awards & Recognition</div>
+                      <div className="bg-yellow-50 p-3 rounded-lg">
+                        {agent.awards.map((award, index) => (
+                          <div key={index} className="text-sm text-yellow-800 flex items-center space-x-2">
+                            <span>🏆</span>
+                            <span>{award}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Contact Information */}
                   <div className="space-y-3 border-t border-gray-100 pt-4">
@@ -227,6 +287,18 @@ const AgentProfiles: React.FC = () => {
                       >
                         <Mail className="w-4 h-4 text-teal-600" />
                         <span className="text-teal-800 font-medium">{agent.email}</span>
+                      </a>
+                    )}
+                    
+                    {agent.website && (
+                      <a
+                        href={agent.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors duration-200 group"
+                      >
+                        <span className="text-purple-600">🌐</span>
+                        <span className="text-purple-800 font-medium">Visit Website</span>
                       </a>
                     )}
                   </div>

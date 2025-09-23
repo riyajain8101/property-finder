@@ -49,12 +49,34 @@ router.post('/profiles', async (req, res, next) => {
     // Helper function to extract agents from various JSON structures
     function extractAgents(data) {
       // Try multiple possible paths for agent profiles
-      return data?.Output?.agent_profiles ||
-             data?.result?.Output?.agent_profiles ||
-             data?.agent_profiles ||
-             data?.agents ||
-             data?.Output ||
-             (Array.isArray(data) ? data : []);
+      const agents = data?.result?.Output?.agent_profiles ||
+                    data?.Output?.agent_profiles ||
+                    data?.agent_profiles ||
+                    data?.agents ||
+                    data?.Output ||
+                    (Array.isArray(data) ? data : []);
+
+      // Normalize agent data to match frontend expectations
+      return Array.isArray(agents) ? agents.map(agent => ({
+        id: agent.id,
+        name: agent.name,
+        email: agent.email,
+        phone: agent.phone,
+        experience: agent.bio || `${agent.years_experience || 0} years of experience`,
+        specialties: agent.specialties || [],
+        recent_sales: agent.recent_sales?.count || 0,
+        rating: 4.5, // Default rating since not provided by API
+        location: agent.service_areas?.join(', ') || 'Redmond, WA',
+        profile_image: agent.photo_url,
+        title: agent.title,
+        company: agent.company,
+        years_experience: agent.years_experience,
+        languages: agent.languages,
+        awards: agent.awards,
+        website: agent.website,
+        availability: agent.availability,
+        contact_preference: agent.contact_preference
+      })) : [];
     }
 
     // Debug logs

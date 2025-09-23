@@ -38,8 +38,13 @@ const PropertyListings: React.FC = () => {
 
     try {
       const response = await propertyApi.generateListings(formData);
-      console.log('Property listings response:', response.data);
-      setProperties(response.data || []);
+      console.log('🏠 PropertyListings Component - Raw response from API service:', response);
+      console.log('🏠 PropertyListings Component - Type of response:', typeof response);
+      console.log('🏠 PropertyListings Component - Is response an array?', Array.isArray(response));
+      console.log('🏠 PropertyListings Component - Response length (if array):', Array.isArray(response) ? response.length : 'N/A');
+      
+      // Set properties - response should already be the data array from API service
+      setProperties(response || []);
     } catch (err: any) {
       setError(err.message || 'Failed to generate property listings');
     } finally {

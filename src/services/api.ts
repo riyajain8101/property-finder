@@ -44,6 +44,10 @@ export const propertyApi = {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    console.log('🔍 Frontend API Service - Full response from backend:', response);
+    console.log('🔍 Frontend API Service - response.data:', response.data);
+    console.log('🔍 Frontend API Service - Type of response.data:', typeof response.data);
+    console.log('🔍 Frontend API Service - Is response.data an array?', Array.isArray(response.data));
     return response.data; // return inner data
   },
 

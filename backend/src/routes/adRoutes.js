@@ -27,7 +27,28 @@ router.post('/generate', async (req, res, next) => {
     const result = await makeSmythosRequest('/api/generate_ads', 'POST', requestData);
 
     // 🔑 Extract ads safely
-    const ads = result?.data?.result?.Output?.ads || [];
+    let ads = [];
+    
+    if (result?.data?.rawText) {
+      // Handle raw text response - SmythOS returned non-JSON
+      console.log('SmythOS returned raw text:', result.data.rawText);
+      // Try to extract JSON from the raw text if it contains JSON
+      try {
+        const jsonMatch = result.data.rawText.match(/\{.*\}/s);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          ads = parsed?.Output?.ads || [];
+        }
+      } catch (e) {
+        console.log('Could not extract JSON from raw text');
+      }
+    } else if (result?.data?.Output?.ads) {
+      // Handle direct JSON response structure
+      ads = result.data.Output.ads;
+    } else if (result?.data?.result?.Output?.ads) {
+      // Handle nested result structure
+      ads = result.data.result.Output.ads;
+    }
 
     // Debug logs
     console.log('SmythOS full response (ads):', JSON.stringify(result.data, null, 2));

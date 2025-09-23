@@ -38,7 +38,28 @@ router.post('/generate-listings', async (req, res, next) => {
     const result = await makeSmythosRequest('/api/generate_listings', 'POST', requestData);
 
     // 🔑 Extract listings safely
-    const listings = result?.data?.result?.Output?.listings || [];
+    let listings = [];
+    
+    if (result?.data?.rawText) {
+      // Handle raw text response - SmythOS returned non-JSON
+      console.log('SmythOS returned raw text:', result.data.rawText);
+      // Try to extract JSON from the raw text if it contains JSON
+      try {
+        const jsonMatch = result.data.rawText.match(/\{.*\}/s);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          listings = parsed?.Output?.listings || [];
+        }
+      } catch (e) {
+        console.log('Could not extract JSON from raw text');
+      }
+    } else if (result?.data?.Output?.listings) {
+      // Handle direct JSON response structure
+      listings = result.data.Output.listings;
+    } else if (result?.data?.result?.Output?.listings) {
+      // Handle nested result structure
+      listings = result.data.result.Output.listings;
+    }
 
     // Debug logs
     console.log('SmythOS full response:', JSON.stringify(result.data, null, 2));
@@ -76,7 +97,28 @@ router.post('/details', async (req, res, next) => {
     const result = await makeSmythosRequest('/api/property_detail', 'POST', requestData);
 
     // 🔑 Extract details safely
-    const details = result?.data?.result?.Output || {};
+    let details = {};
+    
+    if (result?.data?.rawText) {
+      // Handle raw text response - SmythOS returned non-JSON
+      console.log('SmythOS returned raw text:', result.data.rawText);
+      // Try to extract JSON from the raw text if it contains JSON
+      try {
+        const jsonMatch = result.data.rawText.match(/\{.*\}/s);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          details = parsed?.Output || {};
+        }
+      } catch (e) {
+        console.log('Could not extract JSON from raw text');
+      }
+    } else if (result?.data?.Output) {
+      // Handle direct JSON response structure
+      details = result.data.Output;
+    } else if (result?.data?.result?.Output) {
+      // Handle nested result structure
+      details = result.data.result.Output;
+    }
 
     // Debug logs
     console.log('SmythOS full response (details):', JSON.stringify(result.data, null, 2));

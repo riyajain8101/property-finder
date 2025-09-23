@@ -43,8 +43,8 @@ export const makeSmythosRequest = async (endpoint, method = 'GET', data = null, 
     try {
       result = JSON.parse(responseText);
     } catch (parseError) {
-      // If JSON parsing fails, return the raw text
-      result = responseText;
+      // If JSON parsing fails, wrap the raw text in an object
+      result = { rawText: responseText };
     }
 
     console.log('SmythOS response:', result);

@@ -48,12 +48,47 @@ router.get('/data', async (req, res, next) => {
     // Helper function to extract neighborhood info from various JSON structures
     function extractNeighborhoodInfo(data) {
       // Try multiple possible paths for neighborhood info
-      return data?.Output?.neighborhood_info ||
-             data?.result?.Output?.neighborhood_info ||
-             data?.neighborhood_info ||
-             data?.neighborhood ||
-             data?.Output ||
-             data || {};
+      const rawInfo = data?.Output?.neighborhood_info ||
+                      data?.result?.Output?.neighborhood_info ||
+                      data?.neighborhood_info ||
+                      data?.neighborhood ||
+                      data?.Output ||
+                      data || {};
+
+      // Map SmythOS response structure to frontend NeighborhoodData interface
+      return {
+        neighborhood: rawInfo.name || params.neighborhood || '',
+        city: rawInfo.city || params.city || '',
+        demographics: rawInfo.demographics ? {
+          population: rawInfo.demographics.population || 0,
+          median_age: rawInfo.demographics.median_age || 0,
+          median_income: rawInfo.demographics.median_income || 0,
+          education_level: rawInfo.demographics.education_level || ''
+        } : undefined,
+        amenities: rawInfo.amenities ? Object.values(rawInfo.amenities).filter(Boolean) : [],
+        schools: rawInfo.schools || [],
+        transportation: rawInfo.transportation ? {
+          public_transit: rawInfo.transportation.public_transit ? [rawInfo.transportation.public_transit] : [],
+          walkability_score: rawInfo.transportation.walkability_score || 0,
+          bike_score: rawInfo.transportation.bike_score || 0
+        } : undefined,
+        market_trends: rawInfo.housing_market ? {
+          median_home_price: rawInfo.housing_market.median_price || 0,
+          price_change_1yr: rawInfo.housing_market.price_trend === 'rising' ? 5 : 0,
+          days_on_market: rawInfo.housing_market.days_on_market || 0
+        } : undefined,
+        // Include additional useful data from SmythOS
+        overview: rawInfo.overview,
+        safety: rawInfo.safety,
+        lifestyle: rawInfo.lifestyle,
+        amenities_detailed: rawInfo.amenities,
+        pros_cons: rawInfo.pros_cons,
+        best_for: rawInfo.best_for,
+        nearby_neighborhoods: rawInfo.nearby_neighborhoods,
+        cost_of_living: rawInfo.cost_of_living,
+        weather: rawInfo.weather,
+        future_development: rawInfo.future_development
+      };
     }
 
     // Debug logs

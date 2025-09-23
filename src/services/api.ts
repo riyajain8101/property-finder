@@ -67,6 +67,10 @@ export const agentApi = {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    console.log('🔍 Frontend API Service (Agents) - Full response from backend:', response);
+    console.log('🔍 Frontend API Service (Agents) - response.data:', response.data);
+    console.log('🔍 Frontend API Service (Agents) - Type of response.data:', typeof response.data);
+    console.log('🔍 Frontend API Service (Agents) - Is response.data an array?', Array.isArray(response.data));
     return response.data; // return agent_profiles array
   },
 };
@@ -76,6 +80,10 @@ export const neighborhoodApi = {
   getData: async (neighborhood: string, city: string) => {
     const params = new URLSearchParams({ neighborhood, city });
     const response = await apiRequest(`/neighborhoods/data?${params}`);
+    console.log('🔍 Frontend API Service (Neighborhoods) - Full response from backend:', response);
+    console.log('🔍 Frontend API Service (Neighborhoods) - response.data:', response.data);
+    console.log('🔍 Frontend API Service (Neighborhoods) - Type of response.data:', typeof response.data);
+    console.log('🔍 Frontend API Service (Neighborhoods) - Keys in response.data:', Object.keys(response.data || {}));
     return response.data; // return neighborhood info
   },
 };

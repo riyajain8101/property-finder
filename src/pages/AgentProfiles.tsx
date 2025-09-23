@@ -30,9 +30,11 @@ const AgentProfiles: React.FC = () => {
 
     try {
       const response = await agentApi.getProfiles(formData);
-      console.log('Agent profiles response:', response.data);
-      console.log('Frontend received agents:', response.data);
-      setAgents(response.data || []);
+      console.log('👥 AgentProfiles Component - Raw response from API service:', response);
+      console.log('👥 AgentProfiles Component - Type of response:', typeof response);
+      console.log('👥 AgentProfiles Component - Is response an array?', Array.isArray(response));
+      console.log('👥 AgentProfiles Component - Response length (if array):', Array.isArray(response) ? response.length : 'N/A');
+      setAgents(response || []);
     } catch (err: any) {
       setError(err.message || 'Failed to load agent profiles');
     } finally {
@@ -139,7 +141,7 @@ const AgentProfiles: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {agents.map((agent) => (
               <div
-                key={agent.id || index}
+                key={agent.id || `agent-${Math.random()}`}
                 className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group"
               >
                 <div className="p-6">

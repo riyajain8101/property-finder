@@ -29,8 +29,10 @@ const Neighborhoods: React.FC = () => {
 
     try {
       const response = await neighborhoodApi.getData(formData.neighborhood, formData.city);
-      console.log('Neighborhood API response:', response.data); // Debug log
-      setNeighborhoodData(response.data || null);
+      console.log('🏘️ Neighborhoods Component - Raw response from API service:', response);
+      console.log('🏘️ Neighborhoods Component - Type of response:', typeof response);
+      console.log('🏘️ Neighborhoods Component - Keys in response:', Object.keys(response || {}));
+      setNeighborhoodData(response || null);
     } catch (err: any) {
       setError(err.message || 'Failed to load neighborhood data');
     } finally {
@@ -113,7 +115,7 @@ const Neighborhoods: React.FC = () => {
           {/* Header */}
           <div className="text-center bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-2xl p-8">
             <h3 className="text-3xl font-bold mb-2">
-              {neighborhoodData.name || '-'}, {neighborhoodData.city || '-'}
+              {neighborhoodData.neighborhood || '-'}, {neighborhoodData.city || '-'}
             </h3>
             <p className="text-blue-100">Comprehensive Neighborhood Analysis</p>
           </div>

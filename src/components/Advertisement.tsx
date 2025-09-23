@@ -6,7 +6,6 @@ import { Ad } from '../types/Ad';
 const Advertisement: React.FC = () => {
   const [ads, setAds] = useState<Ad[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isHidden, setIsHidden] = useState(false);

@@ -33,9 +33,13 @@ const AdGeneration: React.FC = () => {
 
     try {
       const response = await adApi.generate(formData);
-      console.log('Generated ads response:', response.data);
-      console.log('Frontend received ads:', response.data);
-      setAds(response.data || []);
+      console.log('🎯 AdGeneration Component - Raw response from API service:', response);
+      console.log('🎯 AdGeneration Component - Type of response:', typeof response);
+      console.log('🎯 AdGeneration Component - Is response an array?', Array.isArray(response));
+      console.log('🎯 AdGeneration Component - Response length (if array):', Array.isArray(response) ? response.length : 'N/A');
+      
+      // Fix: response is already the data array from API service, not response.data
+      setAds(response || []);
     } catch (err: any) {
       setError(err.message || 'Failed to generate property ads');
     } finally {

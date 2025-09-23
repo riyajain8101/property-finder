@@ -95,6 +95,11 @@ export const adApi = {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    console.log('🎯 Frontend API Service (Ads) - Full response from backend:', response);
+    console.log('🎯 Frontend API Service (Ads) - response.data:', response.data);
+    console.log('🎯 Frontend API Service (Ads) - Type of response.data:', typeof response.data);
+    console.log('🎯 Frontend API Service (Ads) - Is response.data an array?', Array.isArray(response.data));
+    console.log('🎯 Frontend API Service (Ads) - Response.data length (if array):', Array.isArray(response.data) ? response.data.length : 'N/A');
     return response.data; // return generated ad data
   },
 };

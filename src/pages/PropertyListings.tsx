@@ -258,13 +258,32 @@ const PropertyListings: React.FC = () => {
                 key={property.id}
                 className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group"
               >
-                <div className="h-48 bg-gradient-to-br from-blue-400 via-purple-500 to-teal-400 relative">
+                {/* Property Image */}
+                <div className="h-48 relative overflow-hidden">
+                  {property.image ? (
+                    <img
+                      src={property.image}
+                      alt={property.title || 'Property Image'}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to gradient if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.className = 'h-48 bg-gradient-to-br from-blue-400 via-purple-500 to-teal-400 relative';
+                        }
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-blue-400 via-purple-500 to-teal-400"></div>
+                  )}
                   <div className="absolute inset-0 bg-black/20"></div>
                   <div className="absolute bottom-4 left-4 text-white">
-                    <h3 className="font-bold text-lg truncate">{property.title}</h3>
+                    <h3 className="font-bold text-lg truncate">{property.title || 'Property'}</h3>
                     <div className="flex items-center space-x-1 text-sm">
                       <MapPin className="w-4 h-4" />
-                      <span>{property.location}</span>
+                      <span>{property.location || 'Location not specified'}</span>
                     </div>
                   </div>
                 </div>
@@ -273,21 +292,26 @@ const PropertyListings: React.FC = () => {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-1 text-2xl font-bold text-green-600">
                       <DollarSign className="w-6 h-6" />
-                      <span>{formatPrice(property.price)}</span>
+                      <span>
+                        {property.price !== null && property.price !== undefined 
+                          ? formatPrice(property.price)
+                          : 'Price on request'
+                        }
+                      </span>
                     </div>
                     <div className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                      {property.property_type || '-'}
+                      {property.property_type || 'Property'}
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-4 mb-4 text-gray-600">
                     <div className="flex items-center space-x-1">
                       <Bed className="w-4 h-4" />
-                      <span>{property.bedrooms || '-'} beds</span>
+                      <span>{property.bedrooms || 0} beds</span>
                     </div>
                     <div className="flex items-center space-x-1">
                       <Bath className="w-4 h-4" />
-                      <span>{property.bathrooms || '-'} baths</span>
+                      <span>{property.bathrooms || 0} baths</span>
                     </div>
                   </div>
 

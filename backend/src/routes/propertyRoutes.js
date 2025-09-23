@@ -62,11 +62,40 @@ router.post('/generate-listings', async (req, res, next) => {
     // Helper function to extract listings from various JSON structures
     function extractListings(data) {
       // Try multiple possible paths for listings
-      return data?.Output?.listings ||
+      const listings = data?.Output?.listings ||
              data?.result?.Output?.listings ||
              data?.listings ||
              data?.Output ||
              (Array.isArray(data) ? data : []);
+
+      // Ensure listings is an array and normalize the data
+      const normalizedListings = Array.isArray(listings) ? listings : [];
+      
+      // Process each listing to ensure proper data types
+      return normalizedListings.map(listing => {
+        // Normalize price to a number or null
+        let normalizedPrice = null;
+        if (listing.price !== null && listing.price !== undefined) {
+          if (typeof listing.price === 'string') {
+            // Remove currency symbols and commas, then parse
+            const cleanPrice = listing.price.replace(/[$,]/g, '');
+            const parsedPrice = parseFloat(cleanPrice);
+            normalizedPrice = !isNaN(parsedPrice) ? parsedPrice : null;
+          } else if (typeof listing.price === 'number') {
+            normalizedPrice = listing.price;
+          }
+        }
+
+        return {
+          ...listing,
+          price: normalizedPrice,
+          // Ensure other fields are properly formatted
+          bedrooms: listing.bedrooms || 0,
+          bathrooms: listing.bathrooms || 0,
+          features: Array.isArray(listing.features) ? listing.features : 
+                   (listing.features ? listing.features.split(',').map(f => f.trim()) : [])
+        };
+      });
     }
 
     // Debug logs

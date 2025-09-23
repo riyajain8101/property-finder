@@ -84,6 +84,20 @@ export interface PropertyAd {
   property_type: string;
   price_range: string;
   created_at: string;
+  subtitle?: string;
+  description?: string;
+  company_name?: string;
+  image_url?: string;
+  cta_text?: string;
+  cta_url?: string;
+  phone?: string;
+  email?: string;
+  rating?: number;
+  reviews_count?: number;
+  service_area?: string;
+  special_offer?: string;
+  target_audience?: string;
+  placement_priority?: string;
 }
 
 // Form types

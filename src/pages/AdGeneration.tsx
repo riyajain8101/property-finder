@@ -55,7 +55,8 @@ const AdGeneration: React.FC = () => {
 
   const downloadAd = (ad: PropertyAd) => {
     const element = document.createElement('a');
-    const file = new Blob([ad.content ?? ''], { type: 'text/plain' });
+    const content = `${ad.title || 'Ad'}\n\n${ad.description || ad.content || ''}\n\nCompany: ${ad.company_name || 'N/A'}\nPhone: ${ad.phone || 'N/A'}\nEmail: ${ad.email || 'N/A'}${ad.special_offer ? `\n\nSpecial Offer: ${ad.special_offer}` : ''}`;
+    const file = new Blob([content], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
     element.download = `${ad.title?.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'ad'}.txt`;
     document.body.appendChild(element);
@@ -204,8 +205,13 @@ const AdGeneration: React.FC = () => {
                   <div className="mb-6">
                     <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-blue-500">
                       <div className="text-gray-800 whitespace-pre-line leading-relaxed">
-                        {ad.content || '-'}
+                        {ad.description || ad.content || '-'}
                       </div>
+                      {ad.special_offer && (
+                        <div className="mt-3 p-2 bg-yellow-100 border border-yellow-300 rounded text-yellow-800 text-sm font-medium">
+                          🎉 {ad.special_offer}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -230,12 +236,51 @@ const AdGeneration: React.FC = () => {
                       <span>Download</span>
                     </button>
 
-                    {ad.price_range && (
+                    {ad.company_name && (
                       <div className="flex-1 text-right text-xs text-gray-500">
-                        Price: {ad.price_range}
+                        By: {ad.company_name}
                       </div>
                     )}
                   </div>
+
+                  {/* Additional Ad Details */}
+                  {(ad.phone || ad.email || ad.cta_url) && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                        {ad.phone && (
+                          <div className="flex items-center space-x-1 text-gray-600">
+                            <span>📞</span>
+                            <span>{ad.phone}</span>
+                          </div>
+                        )}
+                        {ad.email && (
+                          <div className="flex items-center space-x-1 text-gray-600">
+                            <span>✉️</span>
+                            <span>{ad.email}</span>
+                          </div>
+                        )}
+                        {ad.rating && (
+                          <div className="flex items-center space-x-1 text-gray-600">
+                            <span>⭐</span>
+                            <span>{ad.rating}/5 ({ad.reviews_count} reviews)</span>
+                          </div>
+                        )}
+                      </div>
+                      {ad.cta_url && ad.cta_text && (
+                        <div className="mt-3">
+                          <a
+                            href={ad.cta_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg hover:from-blue-700 hover:to-teal-700 transition-all duration-200 text-sm font-medium"
+                          >
+                            <span>{ad.cta_text}</span>
+                            <span>→</span>
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

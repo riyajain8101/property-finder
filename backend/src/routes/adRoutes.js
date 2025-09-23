@@ -51,7 +51,9 @@ router.post('/generate', async (req, res, next) => {
     // Helper function to extract ads from various JSON structures
     function extractAds(data) {
       // Try multiple possible paths for ads
-      return data?.Output?.ads ||
+      return data?.result?.Output?.advertisements ||
+             data?.Output?.advertisements ||
+             data?.Output?.ads ||
              data?.result?.Output?.ads ||
              data?.ads ||
              data?.advertisements ||
